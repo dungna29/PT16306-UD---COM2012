@@ -53,12 +53,35 @@ DROP DATABASE Dungna_FPTShopV2;
    ....
 	);
 */
-
+-- Tạo khóa chính trong bảng cách 1
 CREATE TABLE DongSanPham(
 ID INT PRIMARY KEY IDENTITY, 
 MaDSP VARCHAR(10) UNIQUE,
 TenDSP NVARCHAR(50) DEFAULT NULL,
 );
+
+-- Tạo khóa chính trong bảng cách 2
+CREATE TABLE DongSanPham(
+ID INT NOT NULL, 
+MaDSP VARCHAR(10) UNIQUE,
+TenDSP NVARCHAR(50) DEFAULT NULL,
+PRIMARY KEY (ID)
+);
+-- Tạo khóa chính trong bảng cách 3
+CREATE TABLE DongSanPham(
+ID INT NOT NULL PRIMARY KEY , 
+MaDSP VARCHAR(10) UNIQUE,
+TenDSP NVARCHAR(50) DEFAULT NULL,  
+);
+-- Tạo khóa chính trong bảng cách 4
+CREATE TABLE DongSanPham(
+ID INT, 
+MaDSP VARCHAR(10) UNIQUE,
+TenDSP NVARCHAR(50) DEFAULT NULL,  
+CONSTRAINT PK_DongSP PRIMARY KEY (ID,MaDSP) -- CONSTRAINT, nó chỉ ra quy tắc mà dũ liệu của cột phải tuân theo.
+);
+-- Trong ví dụ trên chỉ có MỘT KHÓA CHÍNH (PK_Person). Tuy nhiên, GIÁ TRỊ của khóa chính được tạo thành từ HAI CỘT (ID + LastName).
+
 /*
 	CÂU LỆNH 1.5: DROP TABLE
 	ĐỊNH NGHĨA: XÓA BẢNG TRONG CSDL
@@ -66,6 +89,7 @@ TenDSP NVARCHAR(50) DEFAULT NULL,
 	DROP TABLE table_name;
 */
 DROP TABLE DongSanPham;
+
 /*
 	CÂU LỆNH 1.6: ALTER TABLE
 	ĐỊNH NGHĨA:
@@ -79,9 +103,52 @@ DROP TABLE DongSanPham;
 		- Xóa cột:
 		ALTER TABLE table_name
 		DROP COLUMN column_name;
+
+		- ALTER/MODIFY COLUMN: Để thay đổi kiểu dữ liệu của một cột trong bảng
+		ALTER TABLE table_name
+		ALTER COLUMN column_name datatype;
 */
 ALTER TABLE DongSanPham
 		ADD ColTest int;
 
 ALTER TABLE DongSanPham
 		DROP COLUMN ColTest;
+
+ALTER TABLE DongSanPham
+		ALTER COLUMN ColTest varchar(max);
+
+/*
+	CÂU LỆNH 1.8: CONSTRAINT
+	Câu lệnh 8 Thêm ràng buộc Constraint (Ràng buộc là các qui tắc để hạn chế các giá trị được lưu trữ vào bảng. [DungNA29]
+	Các ràng buộc được sử dụng để giới hạn loại dữ liệu có thể đi vào bảng. Điều này đảm bảo tính chính xác và độ tin cậy của dữ liệu trong bảng. Nếu có bất kỳ vi phạm nào giữa ràng buộc và hành động dữ liệu, hành động đó sẽ bị hủy bỏ)
+
+	Ràng buộc NOT NULL trong SQL: Bảo đảm một cột không thể có giá trị NULL.
+	Ràng buộc DEFAULT trong SQL: Cung cấp một giá trị mặc định cho cột khi không được xác định.
+	Ràng buộc UNIQUE trong SQL: Bảo đảm tất cả giá trị trong một cột là khác nhau.
+	Ràng buộc PRIMARY Key trong SQL: Mỗi hàng/bản ghi được nhận diện một cách duy nhất trong một bảng.
+	Ràng buộc FOREIGN Key trong SQL: Mỗi hàng/bản ghi được nhận diện một cách duy nhất trong bất kỳ bảng nào.
+	Ràng buộc CHECK trong SQL: Bảo đảm tất cả giá trị trong một cột thỏa mãn các điều kiện nào đó.
+	Ràng buộc INDEX trong SQL: Sử dụng để tạo và lấy dữ liệu từ Database một cách nhanh chóng. 
+
+	CREATE TABLE table_name (
+		column1 datatype constraint, Ràng buộc xuất hiện sau kiểu dữ liệu
+		column2 datatype constraint,
+		column3 datatype constraint,
+		....
+	);
+*/
+CREATE TABLE DongSanPham(
+ID INT, 
+MaDSP VARCHAR(10) UNIQUE,
+TenDSP NVARCHAR(50) DEFAULT NULL,  
+CONSTRAINT PK_DongSP PRIMARY KEY (ID,MaDSP) -- CONSTRAINT, nó chỉ ra quy tắc mà dũ liệu của cột phải tuân theo.
+);
+
+/*
+	CÂU LỆNH 1.9: FOREIGN KEY Constraint
+	Tại quan hệ và chỉ định khóa ngoại cho bảng
+	-- Cách 1
+	 <Tên cột>  <kiểu dữ liệu> FOREIGN KEY REFERENCES <Tên bảng khóa chính>(<Tên khóa chính>)
+	-- Cách 2
+	CONSTRAINT <Tên khóa ngoại do mình đặt> FOREIGN KEY (<Tên FK trong bảng>)
+*/
