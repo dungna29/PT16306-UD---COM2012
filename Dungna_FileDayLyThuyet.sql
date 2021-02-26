@@ -234,9 +234,8 @@ VALUES ('DSP03',N'Siêu mỏng'),
 	SELECT * FROM table_name;
 
 */
-SELECT MaDSP,TenDSP FROM DongSanPham;
-SELECT * FROM DongSanPham;
-
+SELECT * FROM NhanVien;
+SELECT MaNV,Sdt FROM NhanVien;
 /*
 	CÂU LỆNH 2.2: Aliases   
 	Bí danh SQL được sử dụng để đặt tên tạm thời cho một bảng hoặc một cột trong bảng.
@@ -251,9 +250,8 @@ SELECT * FROM DongSanPham;
 	SELECT column_name(s)
 	FROM table_name AS alias_name;
 */
-SELECT MaDSP AS N'Mã Dòng Sản Phẩm',
-	   TenDSP AS TenDSPDungna 
-FROM DongSanPham; 
+SELECT MaNV AS N'Mã Nhân Viên',
+		Sdt AS N'Số Điện Thoại' FROM NhanVien;
 
 SELECT dsp.MaDSP,dsp.ID
 FROM DongSanPham AS dsp;
@@ -307,7 +305,7 @@ SELECT TOP 50 PERCENT * FROM DongSanPham;
 	Lưu ý: Mệnh đề WHERE không chỉ được sử dụng trong câu lệnh 
 	SELECT, nó còn được sử dụng trong CẬP NHẬT, câu lệnh XÓA, v.v.! [DungNA29]
 */
-SELECT * FROM DongSanPham WHERE ID = 1;
+SELECT * FROM NhanVien WHERE MaNV = 'LongNT';
 SELECT TOP 100 PERCENT * FROM DongSanPham WHERE TenDSP = N'Siêu mỏng';
 
 /*
@@ -358,10 +356,292 @@ WHERE ID = 2;
 	WHERE CustomerName LIKE 'a_%'	Finds any values that start with "a" and are at least 2 characters in length - Tìm bất kỳ giá trị nào bắt đầu bằng "a" và có ít nhất 2 ký tự
 	WHERE CustomerName LIKE 'a__%'	Finds any values that start with "a" and are at least 3 characters in length - Tìm bất kỳ giá trị nào bắt đầu bằng "a" và có ít nhất 3 ký tự
 	WHERE ContactName LIKE 'a%o'	Finds any values that start with "a" and ends with "o" - Tìm bất kỳ giá trị nào bắt đầu bằng "a" và kết thúc bằng "o"
-
-
+	
 	-- Cú pháp: 
 	SELECT column1, column2, ...
 	FROM table_name
 	WHERE columnN LIKE pattern;	
+*/
+
+SELECT * FROM NhanVien;
+SELECT * FROM NhanVien WHERE TenNV LIKE 'T%';--Tìm kiếm tất cả các nhân viên có tên bắt đầu bằng chữ T
+
+/*
+	CÂU LỆNH 2.7: TOÁN TỬ IN  
+	Toán tử IN cho phép bạn chỉ định nhiều giá trị trong mệnh đề WHERE.
+	Toán tử IN là cách viết tắt của nhiều điều kiện OR.
+
+	-- Cú pháp:
+	SELECT column_name(s)
+	FROM table_name
+	WHERE column_name IN (value1, value2, ...);
+
+	HOẶC
+
+	SELECT column_name(s)
+	FROM table_name
+	WHERE column_name IN (SELECT STATEMENT);
+*/
+SELECT * FROM NhanVien;
+SELECT * FROM NhanVien
+WHERE TenNV IN (N'Dũng',N'Thụ');--Liệt kê ra tất cả các nhân viên có tên là Dũng và Thụ trong công ty
+
+SELECT * FROM NhanVien
+WHERE TenNV = N'Dũng' OR TenNV = N'Thụ';
+
+SELECT * FROM NhanVien
+WHERE IDChucVu IN (SELECT ID FROM ChucVu WHERE ID = 1);
+
+
+/*
+	CÂU LỆNH 2.9: TOÁN TỬ SQL AND, OR và NOT Operators(Toán tử)  và Toán tử BETWEEN
+
+	Mệnh đề WHERE có thể được kết hợp với các toán tử AND, OR và NOT.
+
+	Toán tử AND và OR được sử dụng để lọc các bản ghi dựa trên nhiều hơn một điều kiện:
+
+	Toán tử AND hiển thị một bản ghi nếu tất cả các điều kiện được phân tách bằng AND đều ĐÚNG.
+	Toán tử OR hiển thị một bản ghi nếu bất kỳ điều kiện nào được phân tách bởi OR là TRUE.
+	Toán tử NOT hiển thị một bản ghi nếu (các) điều kiện KHÔNG ĐÚNG.
+
+	-- Cú pháp:
+	AND Syntax
+		SELECT column1, column2, ...
+		FROM table_name
+		WHERE condition1 AND condition2 AND condition3 ...;
+	
+	OR Syntax
+		SELECT column1, column2, ...
+		FROM table_name
+		WHERE condition1 OR condition2 OR condition3 ...;
+	
+	NOT Syntax
+		SELECT column1, column2, ...
+		FROM table_name
+		WHERE NOT condition;
+
+		
+		Toán tử GIỮA chọn các giá trị trong một phạm vi nhất định. Các giá trị có thể là số, văn bản hoặc ngày tháng.
+		Toán tử BETWEEN được bao gồm: giá trị bắt đầu và kết thúc được bao gồm. 
+
+	BETWEEN Syntax
+		SELECT column_name(s)
+		FROM table_name
+		WHERE column_name BETWEEN value1 AND value2;
+*/
+SELECT * FROM NhanVien
+WHERE GioiTinh = 'NAM' AND HoNV = N'NGUYỄN';--Lấy ra các nhân viên có giới tính là nam và họ nguyễn
+
+SELECT * FROM NhanVien
+WHERE LuongNV BETWEEN 9000000 AND 11000000;-- Lấy ra các nhân vien có khoảng lương theo điều kiện
+/*
+	CÂU LỆNH 3.0: TOÁN TỬ IN  COUNT(), AVG() and SUM(),MIN() and MAX() Functions	
+	
+	Hàm COUNT () trả về số hàng phù hợp với tiêu chí được chỉ định.
+
+	Hàm AVG () trả về giá trị trung bình của một cột số.
+
+	Hàm SUM () trả về tổng tổng của một cột số.
+
+	Hàm MIN () trả về giá trị nhỏ nhất của cột đã chọn.
+
+	Hàm MAX () trả về giá trị lớn nhất của cột đã chọn.
+	-- Cú pháp:
+	Cú pháp COUNT ()
+		SELECT COUNT(column_name)
+		FROM table_name
+		WHERE condition;
+	Cú pháp AVG ()
+		SELECT AVG(column_name)
+		FROM table_name
+		WHERE condition;
+	Cú pháp SUM ()
+		SELECT SUM(column_name)
+		FROM table_name
+		WHERE condition;
+	Cú pháp MIN ()
+		SELECT MIN(column_name)
+		FROM table_name
+		WHERE condition;
+	Cú pháp MAX ()
+		SELECT MAX(column_name)
+		FROM table_name
+		WHERE condition;
+
+*/
+SELECT * FROM NhanVien;
+
+-- Tính tổng tiền phải trả cho nhân viên 1 tháng
+SELECT SUM(LuongNV) FROM NhanVien;
+-- In ra tổng tiền phải trả cho nhân viên cửa hàng có mã 1
+SELECT SUM(LuongNV) FROM NhanVien WHERE IDCuaHang = 1;
+
+-- In ra nhân viên có lương cao nhất của công ty
+SELECT MAX(LuongNV) FROM NhanVien;
+
+-- In ra số lượng nhân viên nữ làm tại công ty
+SELECT COUNT(GioiTinh) FROM NhanVien WHERE GioiTinh = N'Nam';
+/*
+	CÂU LỆNH 3.1: ORDER BY	
+	
+	Từ khóa ORDER BY được sử dụng để sắp xếp tập hợp kết quả theo thứ tự tăng dần hoặc giảm dần.
+
+	Từ khóa ORDER BY sắp xếp các bản ghi theo thứ tự tăng dần theo mặc định. Để sắp xếp các bản ghi theo thứ tự giảm dần, 
+	hãy sử dụng từ khóa DESC.
+
+	-- Cú pháp:
+	SELECT column1, column2, ...
+	FROM table_name
+	ORDER BY column1, column2, ... ASC|DESC;
+
+*/
+SELECT * FROM NhanVien ORDER BY LuongNV; -- Sắp xếp tăng dần vì Order by mặc định là tăng dần
+SELECT * FROM NhanVien ORDER BY LuongNV ASC;-- ASC là viết tường minh hơn về tăng dần
+SELECT * FROM NhanVien ORDER BY LuongNV DESC;-- Sắp xếp giảm dần
+/*
+	CÂU LỆNH 3.2: GROUP BY	
+	
+	Câu lệnh GROUP BY nhóm các hàng có cùng giá trị thành các hàng tóm tắt, như "tìm số lượng khách hàng ở mỗi quốc gia".
+
+	Câu lệnh GROUP BY thường được sử dụng với các hàm tổng hợp (COUNT, MAX, MIN, SUM, AVG) để nhóm tập hợp kết quả theo một hoặc nhiều cột.
+
+	-- Cú pháp:
+	SELECT column_name(s)
+	FROM table_name
+	WHERE condition
+	GROUP BY column_name(s)
+	ORDER BY column_name(s);
+
+*/
+SELECT * FROM CuaHang;
+-- In ra danh sách số lượng cửa hàng hiện nay đang nằm ở các tỉnh
+SELECT COUNT(ThanhPho),ThanhPho FROM CuaHang
+GROUP BY ThanhPho;
+
+/*
+	CÂU LỆNH 3.3: MỆNH ĐỀ HAVING - Mệnh đề HAVING đã được thêm vào SQL vì từ khóa WHERE không thể được sử dụng với các hàm tổng hợp. 	
+	
+	Mệnh đề HAVING đã được thêm vào SQL vì không thể sử dụng từ khóa WHERE với các hàm tổng hợp.
+
+	-- Cú pháp:
+	SELECT column_name(s)
+	FROM table_name
+	WHERE condition
+	GROUP BY column_name(s)
+	HAVING condition
+	ORDER BY column_name(s);
+
+*/
+-- In ra danh sách các thành phố có số lượng cửa hàng phải lớn hơn 2
+SELECT COUNT(ThanhPho),ThanhPho FROM CuaHang
+GROUP BY ThanhPho
+HAVING COUNT(ThanhPho) >2;
+/*
+	CÂU LỆNH 3.4: JOIN dùng để kết hợp từ 2 bảng trở lên dựa trên một cột có liên quan chúng lại với nhau  	
+	
+	(INNER) JOIN: Trả về các bản ghi có giá trị khớp trong cả hai bảng - JOIN mặc định chính là INNER JOIN
+	LEFT (OUTER) JOIN: Trả về tất cả các bản ghi từ bảng bên trái và các bản ghi khớp từ bảng bên phải
+	RIGHT (OUTER) JOIN: Trả về tất cả các bản ghi từ bảng bên phải và các bản ghi khớp từ bảng bên trái
+	FULL (OUTER) JOIN:  Trả về tất cả các bản ghi khi có trong bảng bên trái hoặc bên phải
+
+	-- Cú pháp:
+	INNER JOIN Syntax
+		SELECT column_name(s)
+		FROM table1
+		INNER JOIN table2
+		ON table1.column_name = table2.column_name;
+
+	LEFT JOIN Syntax
+		SELECT column_name(s)
+		FROM table1
+		LEFT JOIN table2
+		ON table1.column_name = table2.column_name;
+
+	RIGHT JOIN Syntax
+		SELECT column_name(s)
+		FROM table1
+		RIGHT JOIN table2
+		ON table1.column_name = table2.column_name;
+
+	Self JOIN Syntax
+		SELECT column_name(s)
+		FROM table1 T1, table1 T2
+		WHERE condition;
+
+*/
+SELECT * FROM NhanVien;
+SELECT MaCH,MaNV,TenNV,GioiTinh,Sdt,TenChucVu
+FROM NhanVien 
+JOIN CuaHang ON NhanVien.IDCuaHang = CuaHang.ID
+JOIN ChucVu ON NhanVien.IDChucVu = ChucVu.ID;
+/*
+	CÂU LỆNH 3.5: SQL SELECT INTO
+	Câu lệnh SELECT INTO sao chép dữ liệu từ một bảng vào một bảng mới.
+
+	-- Cú pháp:
+		SELECT *
+		INTO newtable [IN externaldb]
+		FROM oldtable
+		WHERE condition;
+
+	Chỉ sao chép một số cột vào một bảng mới:
+		SELECT column1, column2, column3, ...
+		INTO newtable [IN externaldb]
+		FROM oldtable
+		WHERE condition;
+
+*/
+
+/*
+	CÂU LỆNH 3.6: SQL INSERT INTO SELECT
+	Câu lệnh INSERT INTO SELECT sao chép dữ liệu từ một bảng và chèn nó vào một bảng khác.
+
+	INSERT INTO SELECT yêu cầu các kiểu dữ liệu trong bảng nguồn và bảng đích phải khớp
+	Các bản ghi hiện có trong bảng đích không bị ảnh hưởng
+
+	-- Cú pháp:
+		Sao chép tất cả các cột từ bảng này sang bảng khác:
+			INSERT INTO table2
+			SELECT * FROM table1
+			WHERE condition;
+
+		Chỉ sao chép một số cột từ một bảng sang một bảng khác:
+			INSERT INTO table2 (column1, column2, column3, ...)
+			SELECT column1, column2, column3, ...
+			FROM table1
+			WHERE condition;
+
+*/
+
+/*
+	CÂU LỆNH 3.7: SQL UPDATE 
+	Câu lệnh UPDATE được sử dụng để sửa đổi các bản ghi hiện có trong bảng.	
+
+	-- Cú pháp:
+		UPDATE table_name
+		SET column1 = value1, column2 = value2, ...
+		WHERE condition;
+
+*/
+
+/*
+	CÂU LỆNH 3.8: SQL INDEX 
+	Câu lệnh CREATE INDEX được sử dụng để tạo chỉ mục trong bảng.
+	Các chỉ mục được sử dụng để lấy dữ liệu từ cơ sở dữ liệu nhanh hơn so với cách khác. 
+	Người dùng không thể nhìn thấy các chỉ mục, chúng chỉ được sử dụng để tăng tốc độ tìm kiếm / truy vấn.
+
+	Lưu ý: Cập nhật bảng có chỉ mục mất nhiều thời gian hơn cập nhật bảng không có chỉ mục (vì chỉ mục cũng cần cập nhật). 
+	Vì vậy, chỉ tạo các chỉ mục trên các cột sẽ được tìm kiếm thường xuyên.
+
+	Cú pháp CREATE INDEX
+	Tạo chỉ mục trên bảng. Các giá trị trùng lặp được phép:
+
+	CREATE INDEX index_name
+	ON table_name (column1, column2, ...);
+	TẠO Cú pháp INDEX DUY NHẤT
+	Tạo một chỉ mục duy nhất trên một bảng. Các giá trị trùng lặp không được phép:
+
+	CREATE UNIQUE INDEX index_name
+	ON table_name (column1, column2, ...);
+	Lưu ý: Cú pháp tạo chỉ mục khác nhau giữa các cơ sở dữ liệu khác nhau. Do đó: Hãy kiểm tra cú pháp để tạo chỉ mục trong cơ sở dữ liệu của bạn.
 */
