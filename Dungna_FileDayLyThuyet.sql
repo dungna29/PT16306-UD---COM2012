@@ -569,11 +569,35 @@ HAVING COUNT(ThanhPho) >2;
 		WHERE condition;
 
 */
+-- INNER JOIN có 2 cách viết dưới đây là sử dụng
+-- Cách 1: Không cần viết Inner Join
+SELECT * FROM CuaHang;
 SELECT * FROM NhanVien;
 SELECT MaCH,MaNV,TenNV,GioiTinh,Sdt,TenChucVu
 FROM NhanVien 
 JOIN CuaHang ON NhanVien.IDCuaHang = CuaHang.ID
 JOIN ChucVu ON NhanVien.IDChucVu = ChucVu.ID;
+-- Cách 2: 
+SELECT * FROM NhanVien;
+SELECT MaCH,MaNV,TenNV,GioiTinh,Sdt,TenChucVu
+FROM NhanVien 
+INNER JOIN CuaHang ON NhanVien.IDCuaHang = CuaHang.ID
+INNER JOIN ChucVu ON NhanVien.IDChucVu = ChucVu.ID;
+
+-- LEFT JOIN
+SELECT * FROM CuaHang;
+SELECT * FROM NhanVien;
+SELECT MaCH,MaNV,TenNV,GioiTinh,Sdt
+FROM NhanVien 
+LEFT JOIN CuaHang ON NhanVien.IDCuaHang = CuaHang.ID;
+
+-- RIGHT JOIN
+SELECT * FROM CuaHang;
+SELECT * FROM NhanVien;
+SELECT MaCH,MaNV,TenNV,GioiTinh,Sdt
+FROM NhanVien 
+RIGHT JOIN CuaHang ON NhanVien.IDCuaHang = CuaHang.ID;
+
 /*
 	CÂU LỆNH 3.5: SQL SELECT INTO
 	Câu lệnh SELECT INTO sao chép dữ liệu từ một bảng vào một bảng mới.
@@ -623,6 +647,13 @@ JOIN ChucVu ON NhanVien.IDChucVu = ChucVu.ID;
 		WHERE condition;
 
 */
+SELECT * FROM NhanVien;
+UPDATE NhanVien
+SET GioiTinh = N'NỮ', MaNV = 'Dungna292021'
+WHERE ID = 3;
+
+UPDATE NhanVien
+SET GioiTinh = N'NỮ'
 
 /*
 	CÂU LỆNH 3.8: SQL INDEX 
